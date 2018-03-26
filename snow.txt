@@ -1,0 +1,18 @@
+Pet Adoption(Snow)
+
+(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+var userPet = new gliderecord('u_pet_adoption');
+
+userPet.addquery('u_user', gs.getUserID());
+userPet.query();
+if(userPet.next())
+{
+data.currentPet=
+{
+	name: userPet.u_pet.u_name.tostring(),
+  age: userPet.u_pet.u_age.tostring()
+}
+}
+})();
