@@ -1,0 +1,44 @@
+if (vCACVmProperties != null) {  
+  var log = "";  
+  log += "vCAC VM properties :\n";  
+  var array = new Array();  
+  for each (var key in vCACVmProperties.keys) {  
+  array.push(key + " : " + vCACVmProperties.get(key));  
+  }  
+  array.sort();  
+  
+  for each (var line in array) {  
+  log += "\t" + line + "\n";  
+  }  
+  System.log(log);
+ 
+} 
+var machineProp = vCACVmProperties.get("machine"),
+                id = machineProp.get("id"),
+                vcacVm = Server.findForType("vCAC:VirtualMachine", id);
+
+if (vcacVm !== null) 
+{ 
+                var hostId = vcacVm.getEntity().hostId;
+                var vCACHost = Server.findForType("vCAC:VCACHost", hostId);
+                vCACVmProperties1 = System.getModule("com.vmware.library.vcac").getPropertiesFromVirtualMachine(vCACHost,vcacVm) ;
+                
+                networkTitle = vCACVmProperties1.get("Albertson.NetworkTitle");
+                
+                var sgArray = new Array();
+                
+                var sgRange = /Albertson.SG/g
+                System.log("sgRange: "+ sgRange);
+                for each( var key in vCACVmProperties1.keys){
+                System.log("keys: "+ key + "=" + vCACVmProperties1.get(key))
+                                if(key.search(sgRange)!= -1){
+                                sgArray.push(vCACVmProperties1.get(key));
+                                }
+                }
+                
+                System.log("Print Security Groups mapped to the Server: " +sgArray);
+                var sgArrayLength = sgArray.length;
+                System.log("sgArrayLength: "+ sgArrayLength)
+                var ip_addr= vCACVmProperties1.get("VirtualMachine.Network0.Address")
+                }
+
