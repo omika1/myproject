@@ -1,0 +1,83 @@
+var provisioningRequest = vCACCAFERequestsHelper.getProvisioningRequestForCatalogItem(catalogItem);
+
+//Set some parameters
+provisioningRequest.setDescription(description);
+provisioningRequest.setReasons(reasons);
+if(requestedFor){
+  //Set a different user if this request is for somebody else
+  provisioningRequest.setRequestedFor(requestedFor);
+}
+provisioningRequest.setBusinessGroupId(catalogItem.getOrganization().getSubtenantRef());
+
+//Change some data in the JSON request, in this example increase the number of CPUs to 2.
+var jsonData = vCACCAFERequestsHelper.getProvisioningRequestData(provisioningRequest);
+var json = JSON.parse(jsonData);
+//Change cpu example
+json.ComponentName.data.cpu = 2;
+vCACCAFERequestsHelper.setProvisioningRequestData(provisioningRequest, JSON.stringify(json));
+
+//Do the actual request
+request = System.getModule("com.vmware.library.vcaccafe.request").requestCatalogItemWithProvisioningRequest(catalogItem, provisioningRequest);
+
+
+
+
+
+if(OS = "windows")
+{
+catalogItem = windows2012R2;
+}
+else
+catalogItem = centos;
+
+
+
+var provisioningRequest = vCACCAFERequestsHelper.getProvisioningRequestForCatalogItem(catalogItem);
+
+//Set some parameters
+provisioningRequest.setDescription(description);
+//provisioningRequest.setReasons(reasons);
+//if(requestedFor){
+  //Set a different user if this request is for somebody else
+  //provisioningRequest.setRequestedFor(requestedFor);
+//}
+provisioningRequest.setBusinessGroupId(catalogItem.getOrganization().getSubtenantRef());
+
+//Change some data in the JSON request, in this example increase the number of CPUs to 2.
+
+var jsonData = vCACCAFERequestsHelper.getProvisioningRequestData(provisioningRequest);
+
+System.log(jsonData);
+
+var json = JSON.parse(jsonData);
+System.log(json);
+
+cpu=json.cpu;
+
+vCACCAFERequestsHelper.setProvisioningRequestData(provisioningRequest, JSON.stringify(json));
+request = System.getModule("com.vmware.library.vcaccafe.request").requestCatalogItemWithProvisioningRequest(catalogItem, provisioningRequest);
+
+var disk = new Properties();     //create disk properties object
+var diskdata = new Properties(); //create disk data object
+
+//Set the properties at the data level
+diskdata.capacity = "35";
+diskdata.custom_properties = null;
+diskdata.initial_location = "";
+diskdata.is_clone = false;
+diskdata.label = "Hard disk 2";
+diskdata.userCreated = true;
+diskdata.volumeId = 1; 
+
+//Set the properties on the disk object. 
+disk.classId = "Infrastructure.Compute.Machine.MachineDisk";
+disk.componentId = null;
+disk.componentTypeId = "com.vmware.csp.iaas.blueprint.service";
+disk.typeFilter = null;
+//Add diskdata properties object to the disk object
+disk.put("data",diskdata);
+
+//Now push the new cell to the disks array in the JSON object 
+json.windows2012R2.disks.data.push(disk);
+
+
